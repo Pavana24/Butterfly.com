@@ -1,14 +1,12 @@
 pipeline {
            agent any
            stages {
-              stage('Sonarqube6.7') {
-                 steps {
-                     withSonarQubeEnv('SonarQube Scanner 4.2.0'){
-                         sh 'mvn clean sonar:sonar -Dsonar.host.url=http://172.31.12.23:9000 -Dsonar.projectKey="pipelineproject" -Dsonar.sources=. -Dsonar.java.binaries=.'
-                       }
-                  }
-               }
-             stage('Junit with JOCOCO') {
+           stage('Maven Build') {
+                steps {
+                   sh 'mvn clean package'
+             }
+       }
+       stage('Junit with JOCOCO') {
                 steps {
                    step([$class: 'JacocoPublisher', 
                    execPattern: 'target/*.exec',
@@ -18,11 +16,15 @@ pipeline {
              ])
           }
        }
-             stage('Maven Build') {
-                steps {
-                   sh 'mvn clean package'
-             }
-       }
+              stage('Sonarqube6.7') {
+                 steps {
+                     withSonarQubeEnv('SonarQube Scanner 4.2.0'){
+                         sh 'mvn clean sonar:sonar -Dsonar.host.url=http://172.31.12.23:9000 -Dsonar.projectKey="pipelineproject" -Dsonar.sources=. -Dsonar.java.binaries=.'
+                       }
+                  }
+               }
+             
+             
         }
  }
 
