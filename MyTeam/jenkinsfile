@@ -3,7 +3,7 @@ pipeline {
            stages {
               stage('SonarQube Report') {
                  steps {
-                     withSonarQubeEnv('SonarQube6.7'){
+                     withSonarQubeEnv('SonarQube Scanner 4.2.0'){
                          sh 'mvn clean sonar:sonar -Dsonar.host.url=http://172.31.12.23:9000 -Dsonar.projectKey="pipelineproject" -Dsonar.sources=. -Dsonar.java.binaries=.'
                        }
                   }
